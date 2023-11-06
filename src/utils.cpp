@@ -1,9 +1,20 @@
 
 #include "utils.h"
+#include <time.h>
+
+uint64_t Utils::getChipId()
+{
+#ifdef ESP32
+    uint64_t MAC = ESP.getEfuseMac();
+    return ((MAC >> 8) & 0xFF0000) | ((MAC >> 24) & 0xFF00) | ((MAC >> 40) & 0xFF);
+#else
+    return ESP.getChipId();
+#endif
+}
 
 uint64_t Utils::generateDtuSerial()
 {
-    uint32_t chipId = ESP.getChipId();
+    uint32_t chipId = getChipId();
     uint64_t dtuId = 0;
 
     // Product category (char 1-4): 1 = Micro Inverter, 999 = Dummy

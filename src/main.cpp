@@ -1,10 +1,16 @@
 #include <Arduino.h>
+#ifdef ESP32
+#include <WiFi.h>
+#else
 #include <ESP8266WiFi.h>
+#endif
 #include <Ticker.h>
 #include <Hoymiles.h>
 
 #include "Datastore.h"
 #include "privates.h"
+#include "pin_mapping.h"
+#include "settings.h"
 #include "utils.h"
 
 
@@ -19,7 +25,18 @@ char ssid[] = SSID;
 char pass[] = WIFI_PASS;
 uint64_t dtu_serial = RADIO_DTU_SN;
 
-SPIClass* spiClass = new SPIClass();
+SPIClass* spiClass =
+#ifdef ESP32
+#if defined(CONFIG_IDF_TARGET_ESP32S2) || defined(CONFIG_IDF_TARGET_ESP32S3)
+    new SPIClass(HSPI);
+#elif defined(CONFIG_IDF_TARGET_ESP32C3)
+    new SPIClass(FSPI);
+#else
+    new SPIClass(VSPI);
+#endif
+#else
+new SPIClass();
+#endif
 
 // Global vars
 char Date[16];
@@ -39,7 +56,7 @@ void setup() {
 
     // Problematic since there may be multiple devices with the same name
     // Add serial number to name
-    WiFi.hostname(String(name) + String("_") + String(ESP.getChipId()));
+    WiFi.hostname(String(name) + String("_") + String(Utils::getChipId()));
 
     // Connect to WiFi
     WiFi.begin(ssid, pass);
@@ -57,12 +74,16 @@ void setup() {
 }
 
 static void pre_setup() {
+#ifdef ESP32
+    configTzTime(NTP_TIMEZONE, NTP_SERVER);
+#else
     if (esp8266::coreVersionNumeric() >= 20700000) {
         configTime(NTP_TIMEZONE, NTP_SERVER);
     } else {
         setenv("TZ", NTP_TIMEZONE, 1);
         configTime(0, 0, NTP_SERVER);
     }
+#endif
 
     // NRF24L01+ radio pins:
     // 1. VCC -> 3.3V
@@ -73,31 +94,53 @@ static void pre_setup() {
     // 6. MOSI -> D7 -> GPIO13
     // 7. MISO -> D6 -> GPIO12
     // 8. IRQ -> D4 -> GPIO2
-    if(spiClass->pins(D5, D6, D7, D8)) {
+#ifdef ESP32
+    spiClass->begin(NRF_CLK, NRF_MISO, NRF_MOSI, NRF_CS);
+#else
+    if(spiClass->pins(NRF_CLK, NRF_MISO, NRF_MOSI, NRF_CS) {
         spiClass->begin();
     } else {
         Serial.println("SPI pins not set correctly!");
     }
+#endif
 
     Hoymiles.setMessageOutput(&Serial);
-    Hoymiles.init();
+    //Serial.println("Initializing Hoymiles with 5 seconds poll interval.");
+    Hoymiles.init(5);
 
-    Hoymiles.initNRF(spiClass, D3, D8, D4);
-
-    //Serial.println("Setting radio PA level...");
-    Hoymiles.getRadioNrf()->setPALevel(RF24_PA_LOW);
     //Serial.println("Setting DTU serial...");
     uint64_t dtuId = Utils::generateDtuSerial(); // RADIO_DTU_SN
     //Serial.printf("%0x%08x... ", ((uint32_t)((dtuId >> 32) & 0xFFFFFFFF)), ((uint32_t)(dtuId & 0xFFFFFFFF)));
 
+#ifdef USE_NRF
+    Hoymiles.initNRF(spiClass, NRF_CE, NRF_CS, NRF_IRQ);
+    //Serial.println("Setting NRF radio PA level...");
+    Hoymiles.getRadioNrf()->setPALevel(NRF_PA_LEVEL);
     Hoymiles.getRadioNrf()->setDtuSerial(dtuId);
-    //Serial.println("Setting poll interval...");
-    Hoymiles.setPollInterval(5);
+    
     if(Hoymiles.getRadioNrf()->isConnected()) {
-        Serial.println("openDTU-Lite Connected!");
+        Serial.println("openDTU-Lite NRF Connected!");
     } else {
-        Serial.println("openDTU-Lite Failed to connect!");
+        Serial.println("openDTU-Lite NRF Failed to connect!");
     }
+#endif
+
+#ifdef USE_CMT
+    Hoymiles.initCMT(CMT_SDIO, CMT_CLK, CMT_CS, CMT_FCS, CMT_GPIO2, CMT_GPIO3);
+    Serial.printf("Setting CMT radio frequency to %.1f MHz.\n", CMT_FREQUENCY / 1000);
+    Hoymiles.getRadioCmt()->setInverterTargetFrequency(CMT_FREQUENCY);
+    //Serial.println("Setting CMT radio PA level...");
+    Hoymiles.getRadioCmt()->setPALevel(CMT_PA_LEVEL);
+    Hoymiles.getRadioCmt()->setDtuSerial(dtuId);
+
+    if(Hoymiles.getRadioCmt()->isConnected()) {
+        Serial.println("openDTU-Lite CMT Connected!");
+    } else {
+        Serial.println("openDTU-Lite CMT Failed to connect!");
+    }
+#endif
+
+
 
     // TODO: For now only one hardcoded inverter is supported..
     //       This should be changed to support multiple inverters

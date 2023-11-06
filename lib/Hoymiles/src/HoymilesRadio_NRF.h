@@ -24,6 +24,7 @@ public:
 
 private:
     IRAM_ATTR void handleIntr();
+
     uint8_t getRxNxtChannel();
     uint8_t getTxNxtChannel();
     void switchRxCh();

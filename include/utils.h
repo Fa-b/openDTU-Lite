@@ -5,6 +5,7 @@
 
 class Utils {
 public:
+    static uint64_t getChipId();
     static uint64_t generateDtuSerial();
 };
 

@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #pragma once
 
-//#include "HoymilesRadio_CMT.h"
+#ifdef USE_NRF
 #include "HoymilesRadio_NRF.h"
+#endif
+#ifdef USE_CMT
+#include "HoymilesRadio_CMT.h"
+#endif
 #include "inverters/InverterAbstract.h"
 #include "types.h"
 #include <Print.h>
@@ -15,9 +19,13 @@
 
 class HoymilesClass {
 public:
-    void init();
+    void init(uint32_t pollInterval = 0);
+#ifdef USE_NRF
     void initNRF(SPIClass* initialisedSpiBus, uint8_t pinCE, uint8_t pinSS, uint8_t pinIRQ);
-    //void initCMT(int8_t pin_sdio, int8_t pin_clk, int8_t pin_cs, int8_t pin_fcs, int8_t pin_gpio2, int8_t pin_gpio3);
+#endif
+#ifdef USE_CMT
+    void initCMT(int8_t pin_sdio, int8_t pin_clk, int8_t pin_cs, int8_t pin_fcs, int8_t pin_gpio2, int8_t pin_gpio3);
+#endif
     void loop();
 
     void setMessageOutput(Print* output);
@@ -30,8 +38,12 @@ public:
     void removeInverterBySerial(uint64_t serial);
     size_t getNumInverters();
 
+#ifdef USE_NRF
     HoymilesRadio_NRF* getRadioNrf();
-    //HoymilesRadio_CMT* getRadioCmt();
+#endif
+#ifdef USE_CMT
+    HoymilesRadio_CMT* getRadioCmt();
+#endif
 
     uint32_t PollInterval();
     void setPollInterval(uint32_t interval);
@@ -40,8 +52,12 @@ public:
 
 private:
     std::vector<std::shared_ptr<InverterAbstract>> _inverters;
+#ifdef USE_NRF
     std::unique_ptr<HoymilesRadio_NRF> _radioNrf;
-    //std::unique_ptr<HoymilesRadio_CMT> _radioCmt;
+#endif
+#ifdef USE_CMT
+    std::unique_ptr<HoymilesRadio_CMT> _radioCmt;
+#endif
 
     //std::mutex _mutex;
 
