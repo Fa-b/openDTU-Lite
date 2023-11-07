@@ -20,7 +20,7 @@ void DatastoreClass::loop()
         uint8_t isReachable = 0;
         uint8_t pollEnabledCount = 0;
 
-        //std::lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
 
         _totalAcYieldTotalEnabled = 0;
         _totalAcYieldTotalDigits = 0;
@@ -112,96 +112,96 @@ void DatastoreClass::loop()
 
 float DatastoreClass::getTotalAcYieldTotalEnabled()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalAcYieldTotalEnabled;
 }
 
 float DatastoreClass::getTotalAcYieldDayEnabled()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalAcYieldDayEnabled;
 }
 
 float DatastoreClass::getTotalAcPowerEnabled()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalAcPowerEnabled;
 }
 
 float DatastoreClass::getTotalDcPowerEnabled()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalDcPowerEnabled;
 }
 
 float DatastoreClass::getTotalDcPowerIrradiation()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalDcPowerIrradiation;
 }
 
 float DatastoreClass::getTotalDcIrradiationInstalled()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalDcIrradiationInstalled;
 }
 
 float DatastoreClass::getTotalDcIrradiation()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalDcIrradiation;
 }
 
 uint32_t DatastoreClass::getTotalAcYieldTotalDigits()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalAcYieldTotalDigits;
 }
 
 uint32_t DatastoreClass::getTotalAcYieldDayDigits()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalAcYieldDayDigits;
 }
 
 uint32_t DatastoreClass::getTotalAcPowerDigits()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalAcPowerDigits;
 }
 
 uint32_t DatastoreClass::getTotalDcPowerDigits()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _totalDcPowerDigits;
 }
 
 bool DatastoreClass::getIsAtLeastOneReachable()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _isAtLeastOneReachable;
 }
 
 bool DatastoreClass::getIsAtLeastOneProducing()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _isAtLeastOneProducing;
 }
 
 bool DatastoreClass::getIsAllEnabledProducing()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _isAllEnabledProducing;
 }
 
 bool DatastoreClass::getIsAllEnabledReachable()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _isAllEnabledReachable;
 }
 
 bool DatastoreClass::getIsAtLeastOnePollEnabled()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     return _isAtLeastOnePollEnabled;
 }

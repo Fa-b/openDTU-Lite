@@ -59,7 +59,7 @@ private:
     std::unique_ptr<HoymilesRadio_CMT> _radioCmt;
 #endif
 
-    //std::mutex _mutex;
+    std::mutex _mutex;
 
     uint32_t _pollInterval = 0;
     uint32_t _lastPoll = 0;

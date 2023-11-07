@@ -2,7 +2,7 @@
 #pragma once
 
 #include <TimeoutHelper.h>
-//#include <mutex>
+#include <ThreadSafeQueue.h>
 
 class DatastoreClass {
 public:
@@ -59,7 +59,7 @@ public:
 
 private:
     TimeoutHelper _updateTimeout;
-    //std::mutex _mutex;
+    std::mutex _mutex;
 
     float _totalAcYieldTotalEnabled = 0;
     float _totalAcYieldDayEnabled = 0;

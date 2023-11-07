@@ -97,7 +97,7 @@ static void pre_setup() {
 #ifdef ESP32
     spiClass->begin(NRF_CLK, NRF_MISO, NRF_MOSI, NRF_CS);
 #else
-    if(spiClass->pins(NRF_CLK, NRF_MISO, NRF_MOSI, NRF_CS) {
+    if(spiClass->pins(NRF_CLK, NRF_MISO, NRF_MOSI, NRF_CS)) {
         spiClass->begin();
     } else {
         Serial.println("SPI pins not set correctly!");

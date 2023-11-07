@@ -5,6 +5,18 @@
 #include <optional>
 #include <queue>
 
+// If single threaded environment, define std::mutex to do nothing.
+#if !_GLIBCXX_HAS_GTHREADS
+#pragma message("Using dummy std::mutex implementation")
+namespace std {
+class mutex {
+public:
+    void lock() { }
+    void unlock() { }
+};
+}
+#endif
+
 template <typename T>
 class ThreadSafeQueue {
 public:
@@ -14,7 +26,7 @@ public:
 
     ThreadSafeQueue(ThreadSafeQueue<T>&& other)
     {
-        //std::lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         _queue = std::move(other._queue);
     }
 
@@ -22,13 +34,13 @@ public:
 
     unsigned long size() const
     {
-        //std::lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         return _queue.size();
     }
 
     std::optional<T> pop()
     {
-        //std::lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         if (_queue.empty()) {
             return {};
         }
@@ -39,13 +51,13 @@ public:
 
     void push(const T& item)
     {
-        //std::lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         _queue.push(item);
     }
 
     T front()
     {
-        //std::lock_guard<std::mutex> lock(_mutex);
+        std::lock_guard<std::mutex> lock(_mutex);
         return _queue.front();
     }
 
@@ -58,5 +70,5 @@ private:
     }
 
     std::queue<T> _queue;
-    //mutable std::mutex _mutex;
+    mutable std::mutex _mutex;
 };

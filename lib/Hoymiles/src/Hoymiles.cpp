@@ -49,7 +49,7 @@ void HoymilesClass::initCMT(int8_t pin_sdio, int8_t pin_clk, int8_t pin_cs, int8
 
 void HoymilesClass::loop()
 {
-    //std::lock_guard<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
 
 #ifdef USE_NRF
     _radioNrf->loop();
@@ -242,7 +242,7 @@ void HoymilesClass::removeInverterBySerial(uint64_t serial)
 {
     for (uint8_t i = 0; i < _inverters.size(); i++) {
         if (_inverters[i]->serial() == serial) {
-            //std::lock_guard<std::mutex> lock(_mutex);
+            std::lock_guard<std::mutex> lock(_mutex);
             _inverters.erase(_inverters.begin() + i);
             return;
         }
@@ -269,7 +269,14 @@ HoymilesRadio_CMT* HoymilesClass::getRadioCmt()
 
 bool HoymilesClass::isAllRadioIdle()
 {
-    return _radioNrf.get()->isIdle();// && _radioCmt.get()->isIdle();
+    bool idle = true;
+#ifdef USE_NRF
+    idle &= _radioNrf.get()->isIdle();
+#endif
+#ifdef USE_CMT
+    idle &= _radioCmt.get()->isIdle();
+#endif
+    return idle;
 }
 
 uint32_t HoymilesClass::PollInterval()
