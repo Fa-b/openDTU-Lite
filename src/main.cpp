@@ -13,9 +13,6 @@
 #include "settings.h"
 #include "utils.h"
 
-
-#define UPDATE_INTERVAL 5000  // 5 second
-
 // lib instances
 Ticker updater;
 
@@ -44,7 +41,6 @@ char Time[16];
 
 // Function prototypes
 static void update_Hoymiles(void);
-static void pre_setup(void);
 
 // Setup
 void setup() {
@@ -70,12 +66,10 @@ void setup() {
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
 
-    pre_setup();
-}
-
-static void pre_setup() {
 #ifdef ESP32
     configTzTime(NTP_TIMEZONE, NTP_SERVER);
+    
+    spiClass->begin(NRF_CLK, NRF_MISO, NRF_MOSI, NRF_CS);
 #else
     if (esp8266::coreVersionNumeric() >= 20700000) {
         configTime(NTP_TIMEZONE, NTP_SERVER);
@@ -83,20 +77,7 @@ static void pre_setup() {
         setenv("TZ", NTP_TIMEZONE, 1);
         configTime(0, 0, NTP_SERVER);
     }
-#endif
 
-    // NRF24L01+ radio pins:
-    // 1. VCC -> 3.3V
-    // 2. GND -> GND
-    // 3. CE -> D3 -> GPIO0
-    // 4. CSN -> D8 -> GPIO15
-    // 5. SCK -> D5 -> GPIO14
-    // 6. MOSI -> D7 -> GPIO13
-    // 7. MISO -> D6 -> GPIO12
-    // 8. IRQ -> D4 -> GPIO2
-#ifdef ESP32
-    spiClass->begin(NRF_CLK, NRF_MISO, NRF_MOSI, NRF_CS);
-#else
     if(spiClass->pins(NRF_CLK, NRF_MISO, NRF_MOSI, NRF_CS)) {
         spiClass->begin();
     } else {
