@@ -30,7 +30,7 @@
 #define     NTP_SUNSETTYPE  1U
 
 // Don't touch this:
-extern char hostname[];
+extern char name[];
 extern char ssid[];
 extern char pass[];
 extern uint64_t dtu_serial;
