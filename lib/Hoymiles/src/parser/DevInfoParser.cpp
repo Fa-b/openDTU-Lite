@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
  * Copyright (C) 2022 - 2023 Thomas Basler and others
+ * Modified by Fa-b, 07-11-2023
  */
 #include "DevInfoParser.h"
 #include "../Hoymiles.h"
@@ -28,7 +29,9 @@ const devInfo_t devInfo[] = {
     { { 0x10, 0x21, 0x11, ALL }, 600, "HMS-600" }, // 01
     { { 0x10, 0x21, 0x41, ALL }, 800, "HMS-800" }, // 00
     { { 0x10, 0x11, 0x51, ALL }, 900, "HMS-900" }, // 01
+    { { 0x10, 0x21, 0x51, ALL }, 900, "HMS-900" }, // 03
     { { 0x10, 0x21, 0x71, ALL }, 1000, "HMS-1000" }, // 05
+    { { 0x10, 0x11, 0x71, ALL }, 1000, "HMS-1000" }, // 01
     { { 0x10, 0x22, 0x41, ALL }, 1600, "HMS-1600" }, // 4
     { { 0x10, 0x12, 0x51, ALL }, 1800, "HMS-1800" }, // 01
     { { 0x10, 0x22, 0x51, ALL }, 1800, "HMS-1800" }, // 16

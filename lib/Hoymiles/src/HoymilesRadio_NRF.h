@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Modified by Fa-b, 07-11-2023
+ */
 #pragma once
 
 #include "HoymilesRadio.h"

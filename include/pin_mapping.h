@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Modified by Fa-b, 07-11-2023
+ */
 
 #if defined(ESP32)
     #if defined(FUSION_V2)

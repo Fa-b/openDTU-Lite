@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Modified by Fa-b, 07-11-2023
+ */
+
 // NRF24L01+ Settings
 #define NRF_PA_LEVEL        RF24_PA_LOW         // options: RF24_PA_MIN, RF24_PA_LOW, RF24_PA_HIGH, RF24_PA_MAX
 

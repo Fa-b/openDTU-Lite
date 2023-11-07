@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Modified by Fa-b, 07-11-2023
+ */
 #include <Arduino.h>
 #ifdef ESP32
 #include <WiFi.h>

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
  * Copyright (C) 2022 - 2023 Thomas Basler and others
+ * Modified by Fa-b, 07-11-2023
  */
 #include "StatisticsParser.h"
 #include "../Hoymiles.h"
